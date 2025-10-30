@@ -1,14 +1,24 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
-import KarnatakaMap from "../components/KarnatakaMap";
-import DistrictSelector from "../components/DistrictSelector";
-import KPICard from "../components/KPICard";
+import {
+  Award,
+  Briefcase,
+  DollarSign,
+  MapPin,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import DistrictInfo from "../components/DistrictInfo";
+import DistrictSelector from "../components/DistrictSelector";
+import KarnatakaMap from "../components/KarnatakaMap";
+import KPICard from "../components/KPICard";
 import TrendChart from "../components/TrendChart";
-import { MapPin, Users, Briefcase, DollarSign, TrendingUp, Award } from "lucide-react";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "";
+// If BACKEND_URL isn't provided at build time, fall back to relative '/api' so the
+// nginx server can proxy to the backend. This makes the frontend resilient to
+// missing build-time env vars.
+const API = BACKEND_URL ? `${BACKEND_URL}/api` : "/api";
 
 const Home = () => {
   const [language, setLanguage] = useState("en");
@@ -34,18 +44,18 @@ const Home = () => {
       const [districtsRes, statsRes, comparisonRes] = await Promise.all([
         axios.get(`${API}/districts`),
         axios.get(`${API}/metrics/state`),
-        axios.get(`${API}/metrics/comparison`)
+        axios.get(`${API}/metrics/comparison`),
       ]);
 
       setDistricts(districtsRes.data);
       setStateStats(statsRes.data);
       setComparisonData(comparisonRes.data);
-      
+
       // Select first district by default
       if (districtsRes.data.length > 0) {
         setSelectedDistrictId(districtsRes.data[0].id);
       }
-      
+
       setLoading(false);
     } catch (error) {
       console.error("Error loading data:", error);
@@ -82,7 +92,7 @@ const Home = () => {
       performance: "Performance",
       trend: "6-Month Trend",
       bestPerformer: "Best Performer",
-      needsImprovement: "Needs Improvement"
+      needsImprovement: "Needs Improvement",
     },
     kn: {
       title: "ಮನರೇಗಾ ಕರ್ನಾಟಕ ಕಾರ್ಯಕ್ಷಮತೆ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
@@ -96,8 +106,8 @@ const Home = () => {
       performance: "ಕಾರ್ಯಕ್ಷಮತೆ",
       trend: "೬-ತಿಂಗಳ ಪ್ರವೃತ್ತಿ",
       bestPerformer: "ಅತ್ಯುತ್ತಮ ಕಾರ್ಯಕ್ಷಮತೆ",
-      needsImprovement: "ಸುಧಾರಣೆ ಅಗತ್ಯ"
-    }
+      needsImprovement: "ಸುಧಾರಣೆ ಅಗತ್ಯ",
+    },
   };
 
   const t = text[language];
@@ -107,7 +117,9 @@ const Home = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-amber-600 mx-auto mb-4"></div>
-          <p className="text-xl text-amber-800 font-medium">Loading Dashboard...</p>
+          <p className="text-xl text-amber-800 font-medium">
+            Loading Dashboard...
+          </p>
         </div>
       </div>
     );
@@ -120,10 +132,15 @@ const Home = () => {
         <div className="max-w-[1800px] mx-auto px-6 py-6">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-1" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+              <h1
+                className="text-3xl md:text-4xl font-bold text-white mb-1"
+                style={{ fontFamily: "Space Grotesk, sans-serif" }}
+              >
                 {t.title}
               </h1>
-              <p className="text-amber-100 text-base md:text-lg">{t.subtitle}</p>
+              <p className="text-amber-100 text-base md:text-lg">
+                {t.subtitle}
+              </p>
             </div>
             <button
               onClick={() => setLanguage(language === "en" ? "kn" : "en")}
@@ -140,7 +157,10 @@ const Home = () => {
       <div className="max-w-[1800px] mx-auto px-6 py-8">
         {/* State Overview KPIs */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-amber-900 mb-4 flex items-center gap-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+          <h2
+            className="text-2xl font-bold text-amber-900 mb-4 flex items-center gap-2"
+            style={{ fontFamily: "Space Grotesk, sans-serif" }}
+          >
             <Award className="w-6 h-6" />
             {t.stateOverview}
           </h2>
@@ -181,7 +201,10 @@ const Home = () => {
           {/* Map Section */}
           <div className="lg:col-span-5">
             <div className="bg-white rounded-2xl shadow-xl p-6">
-              <h3 className="text-xl font-bold text-amber-900 mb-4" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+              <h3
+                className="text-xl font-bold text-amber-900 mb-4"
+                style={{ fontFamily: "Space Grotesk, sans-serif" }}
+              >
                 Karnataka Districts Map
               </h3>
               <div className="h-[500px]">
@@ -214,7 +237,10 @@ const Home = () => {
                 />
 
                 <div className="bg-white rounded-2xl shadow-xl p-6">
-                  <h3 className="text-xl font-bold text-amber-900 mb-4 flex items-center gap-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+                  <h3
+                    className="text-xl font-bold text-amber-900 mb-4 flex items-center gap-2"
+                    style={{ fontFamily: "Space Grotesk, sans-serif" }}
+                  >
                     <TrendingUp className="w-5 h-5" />
                     {t.trend}
                   </h3>

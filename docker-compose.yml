@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      # Use a fresh volume name so we don't pick up legacy DB files left in other volumes
+      - postgres_data_fresh:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      # Ensure the backend uses the same DATABASE_URL as the Postgres service (from the project .env)
+      DATABASE_URL: ${DATABASE_URL}
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_BACKEND_URL: "http://localhost:8000"
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data_fresh:
+    # intentionally empty - this will be created fresh on `docker compose up`
