@@ -22,7 +22,18 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 # Postgres connection
-DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql+asyncpg://postgres:postgres@postgres:5432/mgnrega')
+raw_db = os.environ.get('DATABASE_URL', '')
+if not raw_db:
+    # default local compose url
+    DATABASE_URL = 'postgresql+asyncpg://postgres:postgres@postgres:5432/mgnrega'
+else:
+    # Normalize common Postgres URL forms to SQLAlchemy asyncpg scheme
+    if raw_db.startswith('postgres://'):
+        DATABASE_URL = raw_db.replace('postgres://', 'postgresql+asyncpg://', 1)
+    elif raw_db.startswith('postgresql://') and '+asyncpg' not in raw_db:
+        DATABASE_URL = raw_db.replace('postgresql://', 'postgresql+asyncpg://', 1)
+    else:
+        DATABASE_URL = raw_db
 engine = create_async_engine(DATABASE_URL, future=True)
 AsyncSessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
 Base = declarative_base()

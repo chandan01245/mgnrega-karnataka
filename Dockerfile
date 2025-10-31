@@ -70,15 +70,19 @@ RUN printf '%s\n' \
   '[program:nginx]' \
   'command=/usr/sbin/nginx -g "daemon off;"' \
   'autorestart=true' \
-  'stdout_logfile=/dev/fd/1' \
-  'stderr_logfile=/dev/fd/2' \
+  'stdout_logfile=/dev/stdout' \
+  'stdout_logfile_maxbytes=0' \
+  'stderr_logfile=/dev/stderr' \
+  'stderr_logfile_maxbytes=0' \
   '' \
   '[program:uvicorn]' \
   'command=uvicorn server:app --host 127.0.0.1 --port 8000' \
   'directory=/app' \
   'autorestart=true' \
-  'stdout_logfile=/dev/fd/1' \
-  'stderr_logfile=/dev/fd/2' \
+  'stdout_logfile=/dev/stdout' \
+  'stdout_logfile_maxbytes=0' \
+  'stderr_logfile=/dev/stderr' \
+  'stderr_logfile_maxbytes=0' \
   > /etc/supervisor/conf.d/supervisord.conf
 
 ENV PYTHONUNBUFFERED=1
