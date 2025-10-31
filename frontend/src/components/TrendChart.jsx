@@ -139,9 +139,9 @@ const TrendChart = ({ data, language, onMonthClick }) => {
         </ResponsiveContainer>
       </div>
 
-      {/* Bar Chart (now using performance) */}
+      {/* Job Days Bar Chart */}
       <div>
-        <h4 className="text-sm font-medium text-black mb-3">{t.performance}</h4>
+        <h4 className="text-sm font-medium text-black mb-3">{t.jobDays}</h4>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -168,7 +168,7 @@ const TrendChart = ({ data, language, onMonthClick }) => {
               }}
             />
             <Bar
-              dataKey="performance"
+              dataKey="jobDays"
               fill="#3b82f6"
               radius={[8, 8, 0, 0]}
               onClick={(d) => {
@@ -212,12 +212,10 @@ const TrendChart = ({ data, language, onMonthClick }) => {
               </div>
             </div>
             <div>
-              <div className="text-xs text-black">{t.totalWages}</div>
+              <div className="text-xs text-black">{t.performance}</div>
               <div className="font-semibold">
-                {selectedMonth.totalPersondays != null
-                  ? new Intl.NumberFormat("en-IN").format(
-                      Math.round(selectedMonth.totalPersondays)
-                    )
+                {selectedMonth.performance != null
+                  ? `${Number(selectedMonth.performance).toFixed(1)}%`
                   : "—"}
               </div>
             </div>
