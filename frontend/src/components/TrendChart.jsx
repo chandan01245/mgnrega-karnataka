@@ -13,20 +13,30 @@ import {
 
 const TrendChart = ({ data, language, onMonthClick }) => {
   // Sort data by date (newest first from API, reverse for chart)
-  const chartData = [...data].reverse().map((item) => ({
-    month: `${item.month}/${item.year}`,
-    performance: item.performance_index,
-    jobDays: Math.round(item.total_job_days / 1000), // In thousands (for chart)
-    households: item.households_covered,
-    // Full values to show in details
-    totalPersondays: item.total_job_days ?? null,
-    householdWorked: item.households_covered ?? null,
-    totalWages:
-      item.total_wages ||
-      item.total_wages_disbursed ||
-      item.total_wages_disbursed_inr ||
-      null,
-  }));
+  const chartData = [...data]
+    .reverse()
+    .map((item) => {
+      // build a unique timestamp (ISO) to use as x-axis key so we don't get duplicate labels
+      const ts = item.timestamp
+        ? new Date(item.timestamp).toISOString()
+        : `${item.year}-${String(item.month).padStart(2, "0")}-01T00:00:00.000Z`;
+      return {
+        id: item.id ?? `${item.year}-${item.month}`,
+        ts,
+        monthLabel: `${item.month}/${item.year}`,
+        performance: item.performance_index,
+        jobDays: Math.round(item.total_job_days / 1000), // In thousands (for chart)
+        households: item.households_covered,
+        // Full values to show in details
+        totalPersondays: item.total_job_days ?? null,
+        householdWorked: item.households_covered ?? null,
+        totalWages:
+          item.total_wages ||
+          item.total_wages_disbursed ||
+          item.total_wages_disbursed_inr ||
+          null,
+      };
+    });
 
   const [selectedMonth, setSelectedMonth] = useState(null);
 
@@ -88,15 +98,25 @@ const TrendChart = ({ data, language, onMonthClick }) => {
               const payload =
                 e?.activePayload?.[0]?.payload ||
                 (e?.activeLabel &&
-                  chartData.find((d) => d.month === e.activeLabel));
+                  chartData.find(
+                    (d) => d.ts === e.activeLabel || d.monthLabel === e.activeLabel
+                  ));
               if (payload) showDetails(payload);
             }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis
-              dataKey="month"
+              dataKey="ts"
               style={{ fontSize: "12px" }}
               stroke="#6b7280"
+              tickFormatter={(val) => {
+                try {
+                  const d = new Date(val);
+                  return `${d.getMonth() + 1}/${d.getFullYear()}`;
+                } catch (e) {
+                  return val;
+                }
+              }}
             />
             <YAxis style={{ fontSize: "12px" }} stroke="#6b7280" />
             <Tooltip
@@ -127,9 +147,17 @@ const TrendChart = ({ data, language, onMonthClick }) => {
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis
-              dataKey="month"
+              dataKey="ts"
               style={{ fontSize: "12px" }}
               stroke="#6b7280"
+              tickFormatter={(val) => {
+                try {
+                  const d = new Date(val);
+                  return `${d.getMonth() + 1}/${d.getFullYear()}`;
+                } catch (e) {
+                  return val;
+                }
+              }}
             />
             <YAxis style={{ fontSize: "12px" }} stroke="#6b7280" />
             <Tooltip
@@ -158,8 +186,8 @@ const TrendChart = ({ data, language, onMonthClick }) => {
       {selectedMonth && (
         <div className="bg-white rounded-md shadow p-4 mt-2 text-sm">
           <div className="font-medium text-black">
-            {language === "en" ? "Selected Month" : "ಆಯ್ದ ತಿಂಗಳು"}:{" "}
-            {selectedMonth.month}
+            {language === "en" ? "Selected Month" : "ಆಯ್ದ ತಿಂಗಳು"}: {" "}
+            {selectedMonth.monthLabel || selectedMonth.month}
           </div>
           <div className="grid grid-cols-3 gap-4 mt-2">
             <div>
