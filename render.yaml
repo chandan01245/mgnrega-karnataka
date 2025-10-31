@@ -1,30 +1,19 @@
 # Render manifest: deploy both frontend and backend as Docker web services
 services:
   - type: web_service
-    name: gov-project-frontend
+    name: gov-project
     repo: https://github.com/chandan01245/mgnrega-karnataka # replace with your repo URL or leave for Render UI
     branch: main
     env: docker
-    dockerfilePath: frontend/Dockerfile
-    plan: free
-    autoDeploy: true
-    envVars:
-      - key: REACT_APP_BACKEND_URL
-        value: "https://your-backend.onrender.com" # replace with the backend Render URL after deploy
-
-  - type: web_service
-    name: gov-project-backend
-    repo: https://github.com/chandan01245/mgnrega-karnataka # replace with your repo URL or leave for Render UI
-    branch: main
-    env: docker
-    dockerfilePath: backend/Dockerfile
+    dockerfilePath: Dockerfile
+    context: .
     plan: free
     autoDeploy: true
     envVars:
       - key: DATABASE_URL
         value: "postgres://user:pass@host:5432/dbname" # replace with your DB connection
-      - key: PORT
-        value: "10000" # Render provides PORT automatically; keep only if your container expects a specific value
+      - key: REACT_APP_BACKEND_URL
+        value: "http://localhost" # Adjust in Render dashboard after deploy if needed
 
 # Usage notes:
 # - Update repo, envVars and any plan/instance changes via the Render UI or by editing this file.
