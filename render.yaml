@@ -11,9 +11,9 @@ services:
     autoDeploy: true
     envVars:
       - key: DATABASE_URL
-        value: "postgres://user:pass@host:5432/dbname" # replace with your DB connection
+        value: "postgresql://mgnrega_db_cwqx_user:XxgtCpwfMCITwysrifK0t8MmJtCL1hVZ@dpg-d427c4be5dus73bg9n7g-a/mgnrega_db_cwqx" # replace with your DB connection
       - key: REACT_APP_BACKEND_URL
-        value: "http://localhost" # Adjust in Render dashboard after deploy if needed
+        value: "http://127.0.0.1:8000/" # Adjust in Render dashboard after deploy if needed
 
 # Usage notes:
 # - Update repo, envVars and any plan/instance changes via the Render UI or by editing this file.
