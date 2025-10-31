@@ -139,9 +139,9 @@ const TrendChart = ({ data, language, onMonthClick }) => {
         </ResponsiveContainer>
       </div>
 
-      {/* Job Days Bar Chart */}
+      {/* Bar Chart (now using households) */}
       <div>
-        <h4 className="text-sm font-medium text-black mb-3">{t.jobDays}</h4>
+        <h4 className="text-sm font-medium text-black mb-3">{t.households}</h4>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -168,7 +168,7 @@ const TrendChart = ({ data, language, onMonthClick }) => {
               }}
             />
             <Bar
-              dataKey="jobDays"
+              dataKey="households"
               fill="#3b82f6"
               radius={[8, 8, 0, 0]}
               onClick={(d) => {
