@@ -61,7 +61,7 @@ const TrendChart = ({ data, language, onMonthClick }) => {
       households: "Households",
       persondays: "Total Persondays Generated",
       householdWorked: "Household Worked",
-      totalWages: "Total Wages Disbursed (₹)",
+      totalWages: "Job days",
     },
     kn: {
       performance: "ಕಾರ್ಯಕ್ಷಮತೆ %",
@@ -69,7 +69,7 @@ const TrendChart = ({ data, language, onMonthClick }) => {
       households: "ಕುಟುಂಬಗಳು",
       persondays: "ಒಟ್ಟು ವ್ಯಕ್ತಿದಿನಗಳು",
       householdWorked: "ಕೆಲಸ ಮಾಡಿದ ಗೃಹಸ್ಥಿಗಳು",
-      totalWages: "ಒಟ್ಟು ವೇತನ ವಿತರಣೆ (₹)",
+      totalWages: "ಉದ್ಯೋಗ ದಿನಗಳು",
     },
   };
 
@@ -187,10 +187,10 @@ const TrendChart = ({ data, language, onMonthClick }) => {
             <div>
               <div className="text-xs text-black">{t.totalWages}</div>
               <div className="font-semibold">
-                {selectedMonth.totalWages != null
-                  ? `₹${new Intl.NumberFormat("en-IN").format(
-                      Math.round(selectedMonth.totalWages)
-                    )}`
+                {selectedMonth.totalPersondays != null
+                  ? new Intl.NumberFormat("en-IN").format(
+                      Math.round(selectedMonth.totalPersondays)
+                    )
                   : "—"}
               </div>
             </div>
